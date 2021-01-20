@@ -33,6 +33,7 @@ func main() {
 
 	// Middleware
 	e.Use(middleware.Logger())
+	e.Use(middleware.CORS())
 
 	// Routing
 	e.GET("/users", allUsers(db))
