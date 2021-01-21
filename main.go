@@ -40,7 +40,7 @@ func main() {
 	e.POST("/users", newUser(db))
 	e.DELETE("/users/:id", deleteUser(db))
 
-	e.Logger.Fatal(e.Start(os.Getenv("PORT")))
+	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }
 
 func allUsers(db *gorm.DB) func(ctx echo.Context) error {
