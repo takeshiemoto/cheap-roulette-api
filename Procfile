@@ -1,0 +1,1 @@
+web: bin/cheap-roulette-api
