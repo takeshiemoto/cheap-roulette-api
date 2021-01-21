@@ -3,6 +3,7 @@ package main
 import (
 	"cheap-roulette-api/domain"
 	"net/http"
+	"os"
 
 	"github.com/labstack/echo/v4/middleware"
 
@@ -16,13 +17,12 @@ import (
 var (
 	db  *gorm.DB
 	err error
-	dsn = "host=localhost user=roulette dbname=roulette password=roulette sslmode=disable"
 )
 
 func main() {
 
 	// Database
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE_URL")), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
