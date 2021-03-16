@@ -37,7 +37,9 @@ func main() {
 
 	// Routing
 	e.GET("/users", allUsers(db))
+	e.GET("/users/:id", getUser(db))
 	e.POST("/users", newUser(db))
+	e.PUT("/users/:id", updateUser(db))
 	e.DELETE("/users/:id", deleteUser(db))
 
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
@@ -61,6 +63,31 @@ func newUser(db *gorm.DB) func(ctx echo.Context) error {
 			Name: u.Name,
 		})
 		return ctx.String(http.StatusOK, u.Name+" user successfully created")
+	}
+}
+
+func updateUser(db *gorm.DB) func(ctx echo.Context) error {
+	return func(ctx echo.Context) error {
+		u := new(domain.User)
+		if err := ctx.Bind(u); err != nil {
+			return err
+		}
+
+		id := ctx.Param("id")
+		var user domain.User
+		db.First(&user, id)
+		db.Model(&user).Update("name", u.Name)
+
+		return ctx.JSON(http.StatusOK, user)
+	}
+}
+
+func getUser(db *gorm.DB) func(ctx echo.Context) error {
+	return func(ctx echo.Context) error {
+		id := ctx.Param("id")
+		var user domain.User
+		db.First(&user, id)
+		return ctx.JSON(http.StatusOK, user)
 	}
 }
 
